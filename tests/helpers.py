@@ -94,7 +94,7 @@ class TestClient:
         scope = self._make_scope(method, path, headers=headers, query_string=query_string)
         receive = MockReceive(raw_body)
         send = MockSend()
-        asyncio.get_event_loop().run_until_complete(self.app(scope, receive, send))
+        asyncio.run(self.app(scope, receive, send))
         return send
 
     def get(self, path: str, **kwargs: Any) -> MockSend:

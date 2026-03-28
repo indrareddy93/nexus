@@ -66,7 +66,7 @@ def create_token(
     payload_b64 = _b64url_encode(json.dumps(claims, separators=(",", ":")).encode())
     signing_input = f"{header_b64}.{payload_b64}".encode()
 
-    sig = hmac.new(secret.encode(), signing_input, hashlib.sha256).digest()
+    sig = hmac.HMAC(secret.encode(), signing_input, hashlib.sha256).digest()
     return f"{header_b64}.{payload_b64}.{_b64url_encode(sig)}"
 
 
@@ -86,7 +86,7 @@ def decode_token(token: str, *, secret: str) -> dict[str, Any]:
 
         header_b64, payload_b64, sig_b64 = parts
         signing_input = f"{header_b64}.{payload_b64}".encode()
-        expected_sig = hmac.new(secret.encode(), signing_input, hashlib.sha256).digest()
+        expected_sig = hmac.HMAC(secret.encode(), signing_input, hashlib.sha256).digest()
         actual_sig = _b64url_decode(sig_b64)
 
         if not hmac.compare_digest(expected_sig, actual_sig):
