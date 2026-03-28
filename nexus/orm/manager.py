@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 from datetime import datetime
-from typing import Any, Optional, Type, TypeVar
+from typing import Any, TypeVar
 
 from nexus.orm.base import Model
 from nexus.orm.fields import DateTimeField
@@ -22,7 +22,7 @@ class AsyncSQLiteConnection:
 
     def __init__(self, database: str) -> None:
         self.database = database
-        self._conn: Optional[sqlite3.Connection] = None
+        self._conn: sqlite3.Connection | None = None
 
     async def connect(self) -> None:
         self._conn = sqlite3.connect(self.database, check_same_thread=False)
@@ -51,7 +51,7 @@ class AsyncSQLiteConnection:
         cur = await self.execute(sql, params)
         return cur.fetchall()
 
-    async def fetchone(self, sql: str, params: tuple = ()) -> Optional[sqlite3.Row]:
+    async def fetchone(self, sql: str, params: tuple = ()) -> sqlite3.Row | None:
         cur = await self.execute(sql, params)
         return cur.fetchone()
 
@@ -75,21 +75,21 @@ class QueryBuilder:
         )
     """
 
-    def __init__(self, manager: "ModelManager", model_cls: Type[T]) -> None:
+    def __init__(self, manager: ModelManager, model_cls: type[T]) -> None:
         self._manager = manager
         self._model = model_cls
         self._where: list[str] = []
         self._params: list[Any] = []
-        self._order: Optional[str] = None
-        self._limit: Optional[int] = None
-        self._offset: Optional[int] = None
+        self._order: str | None = None
+        self._limit: int | None = None
+        self._offset: int | None = None
         self._select: str = "*"
 
     # ------------------------------------------------------------------
     # Filtering
     # ------------------------------------------------------------------
 
-    def filter(self, **conditions: Any) -> "QueryBuilder":
+    def filter(self, **conditions: Any) -> QueryBuilder:
         """
         Filter by keyword conditions.
 
@@ -132,22 +132,22 @@ class QueryBuilder:
 
         return self
 
-    def where(self, condition: str, *params: Any) -> "QueryBuilder":
+    def where(self, condition: str, *params: Any) -> QueryBuilder:
         """Raw SQL WHERE condition — use with care."""
         self._where.append(condition)
         self._params.extend(params)
         return self
 
-    def order_by(self, column: str, *, desc: bool = False) -> "QueryBuilder":
+    def order_by(self, column: str, *, desc: bool = False) -> QueryBuilder:
         direction = "DESC" if desc else "ASC"
         self._order = f"{column} {direction}"
         return self
 
-    def limit(self, n: int) -> "QueryBuilder":
+    def limit(self, n: int) -> QueryBuilder:
         self._limit = n
         return self
 
-    def offset(self, n: int) -> "QueryBuilder":
+    def offset(self, n: int) -> QueryBuilder:
         self._offset = n
         return self
 
@@ -172,12 +172,12 @@ class QueryBuilder:
         rows = await self._manager.db.fetchall(sql, params)
         return [self._manager._row_to_model(self._model, row) for row in rows]
 
-    async def first(self) -> Optional[T]:
+    async def first(self) -> T | None:
         self._limit = 1
         results = await self.all()
         return results[0] if results else None
 
-    async def last(self) -> Optional[T]:
+    async def last(self) -> T | None:
         if not self._order:
             pk = next((n for n, f in self._model._fields.items() if f.primary_key), "id")
             self._order = f"{pk} DESC"
@@ -245,7 +245,7 @@ class ModelManager:
     async def close(self) -> None:
         await self.db.close()
 
-    async def create_tables(self, *models: Type[Model]) -> None:
+    async def create_tables(self, *models: type[Model]) -> None:
         for model in models:
             await self.db.execute(model.create_table_sql())
             # Create indexes
@@ -257,7 +257,7 @@ class ModelManager:
                     )
                     await self.db.execute(idx_sql)
 
-    async def drop_tables(self, *models: Type[Model]) -> None:
+    async def drop_tables(self, *models: type[Model]) -> None:
         for model in models:
             await self.db.execute(f"DROP TABLE IF EXISTS {model.__table__}")
 
@@ -265,7 +265,7 @@ class ModelManager:
     # CRUD
     # ------------------------------------------------------------------
 
-    async def create(self, model_cls: Type[T], **kwargs: Any) -> T:
+    async def create(self, model_cls: type[T], **kwargs: Any) -> T:
         """Create and persist a new model instance."""
         instance = model_cls(**kwargs)
         return await self.save(instance)
@@ -301,7 +301,7 @@ class ModelManager:
 
         return instance
 
-    async def get(self, model: Type[T], pk: Any) -> Optional[T]:
+    async def get(self, model: type[T], pk: Any) -> T | None:
         """Fetch by primary key. Returns None if not found."""
         pk_name = next((n for n, f in model._fields.items() if f.primary_key), "id")
         row = await self.db.fetchone(
@@ -309,14 +309,14 @@ class ModelManager:
         )
         return self._row_to_model(model, row) if row else None
 
-    async def get_or_404(self, model: Type[T], pk: Any) -> T:
+    async def get_or_404(self, model: type[T], pk: Any) -> T:
         """Fetch by primary key. Raises ValueError (→ 404) if not found."""
         instance = await self.get(model, pk)
         if instance is None:
             raise ValueError(f"{model.__name__} with pk={pk!r} not found")
         return instance
 
-    async def get_or_create(self, model: Type[T], **kwargs: Any) -> tuple[T, bool]:
+    async def get_or_create(self, model: type[T], **kwargs: Any) -> tuple[T, bool]:
         """Return (instance, created). Lookup by kwargs, create if missing."""
         qb = self.query(model)
         for k, v in kwargs.items():
@@ -345,7 +345,7 @@ class ModelManager:
     # Query
     # ------------------------------------------------------------------
 
-    def query(self, model: Type[T]) -> QueryBuilder:
+    def query(self, model: type[T]) -> QueryBuilder:
         """Return a QueryBuilder for *model*."""
         return QueryBuilder(self, model)
 
@@ -362,7 +362,7 @@ class ModelManager:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _row_to_model(model: Type[T], row: Any) -> T:
+    def _row_to_model(model: type[T], row: Any) -> T:
         data = dict(row)
         for name, fld in model._fields.items():
             if name in data:

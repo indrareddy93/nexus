@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import urllib.parse
-from typing import Any, Optional
+from typing import Any
 
 
 class Request:
@@ -31,9 +31,9 @@ class Request:
     def __init__(self, scope: dict, receive: Any) -> None:
         self._scope = scope
         self._receive = receive
-        self._body: Optional[bytes] = None
+        self._body: bytes | None = None
         self._json: Any = _UNSET
-        self._query_params: Optional[dict[str, str]] = None
+        self._query_params: dict[str, str] | None = None
         self.path_params: dict[str, str] = {}
         self.state: dict[str, Any] = {}
 

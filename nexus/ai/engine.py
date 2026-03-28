@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
-from typing import Any, AsyncIterator, Optional
+from typing import Any
 
 
 @dataclass
@@ -154,8 +155,8 @@ class AIEngine:
         """
         try:
             import httpx
-        except ImportError:
-            raise ImportError("Install httpx: pip install httpx")
+        except ImportError as e:
+            raise ImportError("Install httpx: pip install httpx") from e
 
         msgs = self._build_messages(prompt)
         payload = {
@@ -253,8 +254,8 @@ class AIEngine:
     async def _call_api(self, payload: dict) -> AIResponse:
         try:
             import httpx
-        except ImportError:
-            raise ImportError("Install httpx for AI features: pip install httpx")
+        except ImportError as e:
+            raise ImportError("Install httpx for AI features: pip install httpx") from e
 
         headers = self._build_headers()
         async with httpx.AsyncClient(timeout=self.timeout) as client:

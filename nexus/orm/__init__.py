@@ -2,13 +2,13 @@
 
 from nexus.orm.base import Model
 from nexus.orm.fields import (
-    Field,
-    IntField,
-    StrField,
     BoolField,
-    FloatField,
     DateTimeField,
+    Field,
+    FloatField,
+    IntField,
     JSONField,
+    StrField,
     TextField,
 )
 from nexus.orm.manager import ModelManager, QueryBuilder

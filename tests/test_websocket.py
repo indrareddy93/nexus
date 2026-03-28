@@ -1,8 +1,9 @@
 """Tests for nexus/websocket — connection wrapper and room manager."""
 
-import asyncio
 import json
+
 import pytest
+
 from nexus.websocket.connection import RoomManager, WebSocketConnection, WebSocketRoom
 
 

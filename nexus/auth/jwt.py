@@ -10,7 +10,6 @@ import time
 from typing import Any
 
 from nexus.core.request import Request
-from nexus.core.response import ErrorResponse
 from nexus.di.dependencies import Depends
 
 

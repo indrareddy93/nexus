@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import json
-from typing import Any, AsyncIterator, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 
 class WebSocketConnection:
@@ -119,7 +120,7 @@ class WebSocketConnection:
     # Async iteration
     # ------------------------------------------------------------------
 
-    def __aiter__(self) -> "WebSocketConnection":
+    def __aiter__(self) -> WebSocketConnection:
         return self
 
     async def __anext__(self) -> str:
@@ -221,7 +222,7 @@ class RoomManager:
             self._rooms[name] = WebSocketRoom(name)
         return self._rooms[name]
 
-    def get(self, name: str) -> Optional[WebSocketRoom]:
+    def get(self, name: str) -> WebSocketRoom | None:
         return self._rooms.get(name)
 
     def delete(self, name: str) -> None:

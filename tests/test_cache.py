@@ -1,8 +1,9 @@
 """Tests for nexus/cache — in-memory TTL cache."""
 
-import asyncio
 import time
+
 import pytest
+
 from nexus.cache.memory import Cache, cached
 
 

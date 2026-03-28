@@ -10,11 +10,9 @@ Commands:
 from __future__ import annotations
 
 import argparse
-import os
 import subprocess
 import sys
 from pathlib import Path
-
 
 # ------------------------------------------------------------------
 # Templates
@@ -232,12 +230,12 @@ def cmd_new(args: argparse.Namespace) -> None:
         print(f"   ✓  {path.relative_to(target)}")
 
     print(f"\n✅  Project {name!r} created at {target.resolve()}")
-    print(f"\nNext steps:\n")
+    print("\nNext steps:\n")
     print(f"   cd {target}")
-    print(f"   python -m venv .venv && source .venv/bin/activate  # (or .venv\\Scripts\\activate on Windows)")
-    print(f"   pip install -r requirements.txt")
-    print(f"   uvicorn app:app --reload")
-    print(f"\nAPI docs will be available at http://localhost:8000/docs\n")
+    print("   python -m venv .venv && source .venv/bin/activate  # (or .venv\\Scripts\\activate on Windows)")
+    print("   pip install -r requirements.txt")
+    print("   uvicorn app:app --reload")
+    print("\nAPI docs will be available at http://localhost:8000/docs\n")
 
 
 def cmd_run(args: argparse.Namespace) -> None:

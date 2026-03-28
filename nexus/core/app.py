@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import asyncio
 import traceback
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 from nexus.core.openapi import OpenAPIEndpoints
 from nexus.core.request import Request
@@ -69,7 +70,7 @@ class Nexus(Router, OpenAPIEndpoints):
         self._ws_rooms: dict[str, set] = {}
 
         self._docs_mounted = False
-        self._handler_chain: Optional[Callable] = None
+        self._handler_chain: Callable | None = None
 
     # ------------------------------------------------------------------
     # Middleware

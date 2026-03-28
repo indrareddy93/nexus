@@ -7,14 +7,15 @@ import functools
 import logging
 import time
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Optional
+from typing import Any
 
 logger = logging.getLogger("nexus.tasks")
 
 
-class TaskStatus(str, Enum):
+class TaskStatus(str, Enum):  # noqa: UP042
     PENDING = "pending"
     RUNNING = "running"
     SUCCESS = "success"
@@ -49,11 +50,11 @@ class Task:
     task_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     status: TaskStatus = TaskStatus.PENDING
     result: Any = None
-    error: Optional[str] = None
+    error: str | None = None
     attempts: int = 0
     created_at: float = field(default_factory=time.monotonic)
-    started_at: Optional[float] = None
-    finished_at: Optional[float] = None
+    started_at: float | None = None
+    finished_at: float | None = None
 
     @property
     def elapsed(self) -> float | None:
@@ -127,7 +128,7 @@ class TaskQueue:
         self._running = False
         try:
             await asyncio.wait_for(self._queue.join(), timeout=timeout)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             logger.warning("Queue did not drain within %ss — cancelling workers", timeout)
         for w in self._worker_tasks:
             w.cancel()
@@ -214,7 +215,7 @@ class TaskQueue:
     # Status
     # ------------------------------------------------------------------
 
-    def get_task(self, task_id: str) -> Optional[Task]:
+    def get_task(self, task_id: str) -> Task | None:
         return self._tasks.get(task_id)
 
     def list_tasks(
@@ -248,7 +249,7 @@ class TaskQueue:
         while self._running:
             try:
                 t: Task = await asyncio.wait_for(self._queue.get(), timeout=1.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 continue
             except asyncio.CancelledError:
                 break

@@ -1,5 +1,5 @@
 """Nexus dependency injection — FastAPI-style Depends() with auto-resolution."""
 
-from nexus.di.dependencies import DIContainer, Depends, Injectable
+from nexus.di.dependencies import Depends, DIContainer, Injectable
 
 __all__ = ["DIContainer", "Depends", "Injectable"]

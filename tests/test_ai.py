@@ -1,8 +1,9 @@
 """Tests for nexus/ai — embeddings, RAG (using mock provider)."""
 
 import pytest
-from nexus.ai.engine import AIEngine, AIMessage
+
 from nexus.ai.embeddings import EmbeddingEngine, _cosine_similarity
+from nexus.ai.engine import AIEngine, AIMessage
 from nexus.ai.rag import RAGPipeline
 
 

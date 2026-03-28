@@ -1,8 +1,7 @@
 """Tests for nexus/middleware — CORS, rate limiting, logging."""
 
-import pytest
-from nexus import Nexus, Request, Response
-from nexus.middleware import CORSMiddleware, RateLimitMiddleware, LoggingMiddleware
+from nexus import Nexus, Response
+from nexus.middleware import CORSMiddleware, LoggingMiddleware, RateLimitMiddleware
 from tests.helpers import TestClient
 
 

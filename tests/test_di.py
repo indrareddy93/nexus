@@ -1,8 +1,9 @@
 """Tests for nexus/di — dependency injection."""
 
 import pytest
-from nexus.di.dependencies import DIContainer, Depends, Injectable
+
 from nexus.core.request import Request
+from nexus.di.dependencies import Depends, DIContainer
 from tests.helpers import MockReceive
 
 

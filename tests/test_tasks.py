@@ -1,8 +1,10 @@
 """Tests for nexus/tasks — async task queue, retry, scheduling."""
 
 import asyncio
+
 import pytest
-from nexus.tasks.queue import Task, TaskQueue, TaskStatus, task
+
+from nexus.tasks.queue import TaskQueue, TaskStatus, task
 
 
 class TestTaskQueue:

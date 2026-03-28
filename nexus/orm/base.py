@@ -5,13 +5,13 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, ClassVar
 
-from nexus.orm.fields import DateTimeField, Field, IntField
+from nexus.orm.fields import DateTimeField, Field
 
 
 class ModelMeta(type):
     """Metaclass that collects Field descriptors into ``_fields``."""
 
-    def __new__(mcs, name: str, bases: tuple, namespace: dict) -> "ModelMeta":
+    def __new__(mcs, name: str, bases: tuple, namespace: dict) -> ModelMeta:
         fields: dict[str, Field] = {}
 
         # Inherit parent fields
@@ -89,7 +89,7 @@ class Model(metaclass=ModelMeta):
         return f"CREATE TABLE IF NOT EXISTS {cls.__table__} ({', '.join(col_defs)})"
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "Model":
+    def from_dict(cls, data: dict[str, Any]) -> Model:
         return cls(**data)
 
     def __repr__(self) -> str:

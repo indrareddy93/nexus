@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
-
+from typing import Any
 
 # Convert "/users/{id}/posts/{post_id}" → regex + param names
 _PARAM_RE = re.compile(r"\{(\w+)(?::([^}]+))?\}")
@@ -155,7 +155,7 @@ class Router:
     # Sub-router mounting
     # ------------------------------------------------------------------
 
-    def include_router(self, router: "Router") -> None:
+    def include_router(self, router: Router) -> None:
         for route in router.routes:
             new_route = Route(
                 path=self.prefix + route.path,

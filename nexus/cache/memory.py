@@ -5,8 +5,9 @@ from __future__ import annotations
 import asyncio
 import functools
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
@@ -91,7 +92,6 @@ class Cache:
         return len(self._store)
 
     def stats(self) -> dict[str, int]:
-        now = time.monotonic()
         active = sum(1 for e in self._store.values() if not e.is_expired())
         expired = len(self._store) - active
         return {"total": len(self._store), "active": active, "expired": expired}

@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import json
-from typing import Any, AsyncIterator, Optional
+from collections.abc import AsyncIterator
+from typing import Any
 
 
 class Response:
@@ -66,7 +67,7 @@ class Response:
         status_code: int = 200,
         headers: dict[str, str] | None = None,
         indent: int | None = None,
-    ) -> "JSONResponse":
+    ) -> JSONResponse:
         return JSONResponse(data, status_code=status_code, headers=headers, indent=indent)
 
     @classmethod
@@ -76,7 +77,7 @@ class Response:
         *,
         status_code: int = 200,
         headers: dict[str, str] | None = None,
-    ) -> "HTMLResponse":
+    ) -> HTMLResponse:
         return HTMLResponse(content, status_code=status_code, headers=headers)
 
     @classmethod
@@ -86,15 +87,15 @@ class Response:
         *,
         status_code: int = 200,
         headers: dict[str, str] | None = None,
-    ) -> "Response":
+    ) -> Response:
         return cls(content, status_code=status_code, headers=headers, content_type="text/plain; charset=utf-8")
 
     @classmethod
-    def redirect(cls, url: str, *, status_code: int = 302) -> "Response":
+    def redirect(cls, url: str, *, status_code: int = 302) -> Response:
         return cls("", status_code=status_code, headers={"location": url})
 
     @classmethod
-    def no_content(cls) -> "Response":
+    def no_content(cls) -> Response:
         return cls("", status_code=204)
 
     def __repr__(self) -> str:

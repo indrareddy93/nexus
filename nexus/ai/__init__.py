@@ -1,9 +1,9 @@
 """Nexus AI module — LLM engine, embeddings, RAG, and AI middleware."""
 
-from nexus.ai.engine import AIEngine, AIMessage, AIResponse
 from nexus.ai.embeddings import EmbeddingEngine, SearchResult
-from nexus.ai.rag import RAGPipeline, RAGResponse
+from nexus.ai.engine import AIEngine, AIMessage, AIResponse
 from nexus.ai.middleware import AIMiddleware
+from nexus.ai.rag import RAGPipeline, RAGResponse
 
 __all__ = [
     "AIEngine",

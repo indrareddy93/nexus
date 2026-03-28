@@ -1,9 +1,11 @@
 """Tests for nexus/auth — JWT and RBAC."""
 
 import time
+
 import pytest
+
 from nexus.auth.jwt import JWTAuth, JWTError, create_token, decode_token
-from nexus.auth.rbac import RBACPolicy, Role
+from nexus.auth.rbac import RBACPolicy
 
 
 class TestJWT:

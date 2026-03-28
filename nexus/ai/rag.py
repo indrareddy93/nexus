@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from nexus.ai.engine import AIEngine, AIResponse
 from nexus.ai.embeddings import EmbeddingEngine, SearchResult
+from nexus.ai.engine import AIEngine
 
 
 @dataclass

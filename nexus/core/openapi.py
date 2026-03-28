@@ -8,7 +8,6 @@ from typing import Any
 
 from nexus.core.routing import Route
 
-
 _PARAM_RE = re.compile(r"\{(\w+)(?::([^}]+))?\}")
 
 _TYPE_MAP = {

@@ -1,8 +1,8 @@
 """Tests for nexus/orm — fields, models, manager, query builder."""
 
 import pytest
-from nexus.orm import Model, IntField, StrField, BoolField, DateTimeField, JSONField, ModelManager
 
+from nexus.orm import BoolField, DateTimeField, IntField, JSONField, Model, ModelManager, StrField
 
 # ---------------------------------------------------------------------------
 # Model definition
