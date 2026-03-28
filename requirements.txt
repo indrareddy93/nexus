@@ -1,0 +1,11 @@
+# Core runtime — Nexus itself has zero mandatory dependencies.
+# Install the extras below as needed.
+
+# ASGI server (required to run)
+uvicorn[standard]>=0.30.0
+
+# HTTP client (required for AI module)
+httpx>=0.27.0
+
+# Optional
+pyyaml>=6.0
